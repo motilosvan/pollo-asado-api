@@ -237,13 +237,6 @@ El código fuente del proyecto se encuentra disponible en GitHub:
 ```text
 https://github.com/motilosvan/pollo-asado-api
 ```
-
-# Autora
-
-Natalia Omaña
-
-Proyecto académico — Pollo Asado API.
-
 # Licencia
 
 Este proyecto fue desarrollado con fines académicos.
