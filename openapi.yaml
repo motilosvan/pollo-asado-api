@@ -2,20 +2,24 @@ openapi: 3.0.3
 
 info:
   title: Pollo Asado API
-  description: API REST para la gestión de una pollería de pollo asado.
+  description: API REST para gestionar productos, clientes y pedidos de un restaurante de pollo asado.
   version: 1.0.0
 
 servers:
   - url: http://localhost:3000
+    description: Servidor local
 
 tags:
   - name: Products
+    description: Operaciones relacionadas con productos
   - name: Customers
+    description: Operaciones relacionadas con clientes
   - name: Orders
+    description: Operaciones relacionadas con pedidos
 
 paths:
 
-  /products:
+  /api/products:
     get:
       tags:
         - Products
@@ -23,6 +27,12 @@ paths:
       responses:
         '200':
           description: Lista de productos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
 
     post:
       tags:
@@ -33,25 +43,31 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Product'
+              $ref: '#/components/schemas/ProductInput'
       responses:
         '201':
-          description: Producto creado
+          description: Producto creado correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '400':
+          description: Datos requeridos faltantes
 
-  /products/{id}:
+  /api/products/{id}:
     get:
       tags:
         - Products
-      summary: Obtener un producto
+      summary: Obtener un producto por ID
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
+        - $ref: '#/components/parameters/IdParameter'
       responses:
         '200':
           description: Producto encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
         '404':
           description: Producto no encontrado
 
@@ -60,36 +76,34 @@ paths:
         - Products
       summary: Actualizar un producto
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
+        - $ref: '#/components/parameters/IdParameter'
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Product'
+              $ref: '#/components/schemas/ProductInput'
       responses:
         '200':
-          description: Producto actualizado
+          description: Producto actualizado correctamente
+        '400':
+          description: Datos requeridos faltantes
+        '404':
+          description: Producto no encontrado
 
     delete:
       tags:
         - Products
       summary: Eliminar un producto
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
+        - $ref: '#/components/parameters/IdParameter'
       responses:
-        '204':
-          description: Producto eliminado
+        '200':
+          description: Producto eliminado correctamente
+        '404':
+          description: Producto no encontrado
 
-  /customers:
+  /api/customers:
     get:
       tags:
         - Customers
@@ -97,6 +111,12 @@ paths:
       responses:
         '200':
           description: Lista de clientes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Customer'
 
     post:
       tags:
@@ -107,61 +127,59 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Customer'
+              $ref: '#/components/schemas/CustomerInput'
       responses:
         '201':
-          description: Cliente creado
+          description: Cliente creado correctamente
+        '400':
+          description: Datos requeridos faltantes
 
-  /customers/{id}:
+  /api/customers/{id}:
     get:
       tags:
         - Customers
-      summary: Obtener un cliente
+      summary: Obtener un cliente por ID
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
+        - $ref: '#/components/parameters/IdParameter'
       responses:
         '200':
           description: Cliente encontrado
+        '404':
+          description: Cliente no encontrado
 
     put:
       tags:
         - Customers
       summary: Actualizar un cliente
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
+        - $ref: '#/components/parameters/IdParameter'
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Customer'
+              $ref: '#/components/schemas/CustomerInput'
       responses:
         '200':
-          description: Cliente actualizado
+          description: Cliente actualizado correctamente
+        '400':
+          description: Datos requeridos faltantes
+        '404':
+          description: Cliente no encontrado
 
     delete:
       tags:
         - Customers
       summary: Eliminar un cliente
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
+        - $ref: '#/components/parameters/IdParameter'
       responses:
-        '204':
-          description: Cliente eliminado
+        '200':
+          description: Cliente eliminado correctamente
+        '404':
+          description: Cliente no encontrado
 
-  /orders:
+  /api/orders:
     get:
       tags:
         - Orders
@@ -169,6 +187,12 @@ paths:
       responses:
         '200':
           description: Lista de pedidos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Order'
 
     post:
       tags:
@@ -179,112 +203,135 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Order'
+              $ref: '#/components/schemas/OrderInput'
       responses:
         '201':
-          description: Pedido creado
+          description: Pedido creado correctamente
+        '400':
+          description: Datos requeridos faltantes
 
-  /orders/{id}:
+  /api/orders/{id}:
     get:
       tags:
         - Orders
-      summary: Obtener un pedido
+      summary: Obtener un pedido por ID
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
+        - $ref: '#/components/parameters/IdParameter'
       responses:
         '200':
           description: Pedido encontrado
+        '404':
+          description: Pedido no encontrado
 
     put:
       tags:
         - Orders
       summary: Actualizar un pedido
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
+        - $ref: '#/components/parameters/IdParameter'
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Order'
+              $ref: '#/components/schemas/OrderInput'
       responses:
         '200':
-          description: Pedido actualizado
+          description: Pedido actualizado correctamente
+        '400':
+          description: Datos requeridos faltantes
+        '404':
+          description: Pedido no encontrado
 
     delete:
       tags:
         - Orders
       summary: Eliminar un pedido
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
+        - $ref: '#/components/parameters/IdParameter'
       responses:
-        '204':
-          description: Pedido eliminado
+        '200':
+          description: Pedido eliminado correctamente
+        '404':
+          description: Pedido no encontrado
 
 components:
+
+  parameters:
+    IdParameter:
+      name: id
+      in: path
+      required: true
+      description: Identificador del recurso
+      schema:
+        type: integer
+        example: 1
 
   schemas:
 
     Product:
       type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: Pollo Asado Entero
+        price:
+          type: number
+          example: 28000
+
+    ProductInput:
+      type: object
       required:
         - name
         - price
-        - category
       properties:
-        id:
-          type: integer
-          example: 1
         name:
           type: string
-          example: Pollo asado entero
-        description:
-          type: string
-          example: Pollo asado entero con papas
+          example: Pollo Asado Entero
         price:
           type: number
-          example: 35000
-        category:
-          type: string
-          example: Pollo
+          example: 28000
 
     Customer:
       type: object
-      required:
-        - name
-        - phone
       properties:
         id:
           type: integer
           example: 1
         name:
           type: string
-          example: Juan Pérez
+          example: Natalia Omaña
+        email:
+          type: string
+          format: email
+          example: natalia@example.com
         phone:
           type: string
           example: "3001234567"
-        address:
+
+    CustomerInput:
+      type: object
+      required:
+        - name
+        - email
+        - phone
+      properties:
+        name:
           type: string
-          example: Calle 10 # 20-30
+          example: Natalia Omaña
+        email:
+          type: string
+          format: email
+          example: natalia@example.com
+        phone:
+          type: string
+          example: "3001234567"
 
     Order:
       type: object
-      required:
-        - customerId
-        - total
-        - status
       properties:
         id:
           type: integer
@@ -292,9 +339,52 @@ components:
         customerId:
           type: integer
           example: 1
+        products:
+          type: array
+          items:
+            type: object
+            properties:
+              productId:
+                type: integer
+                example: 1
+              quantity:
+                type: integer
+                example: 2
         total:
           type: number
-          example: 45000
+          example: 56000
         status:
           type: string
-          example: Pendiente
+          example: pending
+
+    OrderInput:
+      type: object
+      required:
+        - customerId
+        - products
+        - total
+        - status
+      properties:
+        customerId:
+          type: integer
+          example: 1
+        products:
+          type: array
+          items:
+            type: object
+            required:
+              - productId
+              - quantity
+            properties:
+              productId:
+                type: integer
+                example: 1
+              quantity:
+                type: integer
+                example: 2
+        total:
+          type: number
+          example: 56000
+        status:
+          type: string
+          example: pending
